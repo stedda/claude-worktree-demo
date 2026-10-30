@@ -21,7 +21,7 @@ if ! tmux has-session -t "=$session" 2>/dev/null; then
   for title in fix-auth refactor-billing flaky-tests; do
     pane=$(tmux list-panes -t "$session:demo" -F '#{pane_id}' | sed -n "$((index + 1))p")
     tmux select-pane -t "$pane" -T "$title"
-    tmux send-keys -t "$pane" "PROMPT='demo % '; RPROMPT=''; clear; git branch" Enter
+    tmux send-keys -t "$pane" "PROMPT='demo %% '; RPROMPT=''; clear; git branch" Enter
     index=$((index + 1))
   done
   first=$(tmux list-panes -t "$session:demo" -F '#{pane_id}' | sed -n '1p')
