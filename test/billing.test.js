@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { calculateTotal, createInvoice } from '../src/billing.js';
+import { calculateTotal, createInvoice, formatInvoice } from '../src/billing.js';
 
 const items = [
   { name: 'Notebook', priceCents: 1_200, quantity: 2 },
@@ -43,4 +43,20 @@ test('ignores a negative discount', () => {
   assert.deepEqual(createInvoice(items, 0, -500), {
     subtotal: 2_700, discount: 0, tax: 0, total: 2_700,
   });
+});
+
+test('formats an invoice without a discount', () => {
+  const invoice = createInvoice(items, 0.2);
+  assert.equal(
+    formatInvoice(invoice),
+    ['Subtotal: $27.00', 'Tax:      $5.40', 'Total:    $32.40'].join('\n'),
+  );
+});
+
+test('formats an invoice with a discount line', () => {
+  const invoice = createInvoice(items, 0.2, 700);
+  assert.equal(
+    formatInvoice(invoice),
+    ['Subtotal: $27.00', 'Discount: -$7.00', 'Tax:      $4.00', 'Total:    $24.00'].join('\n'),
+  );
 });
