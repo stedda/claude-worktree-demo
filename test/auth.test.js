@@ -8,6 +8,10 @@ test('accepts a session that expires in the future', () => {
   assert.equal(isSessionValid({ userId: 'demo-user', expiresAt: now + 1 }, now), true);
 });
 
+test('rejects a session expiring exactly now', () => {
+  assert.equal(isSessionValid({ userId: 'demo-user', expiresAt: now }, now), false);
+});
+
 test('rejects an expired session', () => {
   assert.equal(isSessionValid({ userId: 'demo-user', expiresAt: now - 1 }, now), false);
 });
