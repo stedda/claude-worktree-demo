@@ -1,32 +1,33 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { performance } from 'node:perf_hooks';
 import { retry } from '../src/retry.js';
 
 test('returns a successful result', async () => {
   assert.equal(await retry(async () => 'ok'), 'ok');
 });
 
-test('retries a transient failure after a short delay', async () => {
+test('retries a transient failure after requesting the configured delay', async () => {
   let calls = 0;
-  const started = performance.now();
+  const delays = [];
   const result = await retry(async () => {
     calls++;
     if (calls === 1) throw new Error('temporary failure');
     return 'recovered';
-  }, { delayMs: 10 });
+  }, { delayMs: 10, wait: async (ms) => { delays.push(ms); } });
 
   assert.equal(result, 'recovered');
   assert.equal(calls, 2);
-  // Intentionally fragile: a busy machine can exceed this wall-clock budget.
-  assert.ok(performance.now() - started < 100, 'retry should finish within 100ms');
+  // Assert the requested delay, not elapsed wall-clock time.
+  assert.deepEqual(delays, [10]);
 });
 
 test('throws the final error after exhausting attempts', async () => {
   let calls = 0;
+  const delays = [];
   await assert.rejects(retry(async () => {
     calls++;
     throw new Error('service unavailable');
-  }, { attempts: 2, delayMs: 1 }), /service unavailable/);
+  }, { attempts: 2, delayMs: 1, wait: async (ms) => { delays.push(ms); } }), /service unavailable/);
   assert.equal(calls, 2);
+  assert.deepEqual(delays, [1]);
 });
