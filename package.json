@@ -1,0 +1,13 @@
+{
+  "name": "claude-worktree-demo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A tiny fictional app for a three-worktree demo.",
+  "scripts": {
+    "test": "node --test",
+    "demo:panes": "bash demo/panes.sh",
+    "demo:prs": "bash demo/pr-list.sh"
+  },
+  "engines": { "node": ">=20" }
+}
