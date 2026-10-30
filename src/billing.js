@@ -16,3 +16,18 @@ export function createInvoice(items, taxRate = 0, discountCents = 0) {
   const tax = Math.round(discounted * taxRate);
   return { subtotal, discount, tax, total: discounted + tax };
 }
+
+function formatCents(cents) {
+  return `$${(cents / 100).toFixed(2)}`;
+}
+
+export function formatInvoice(invoice) {
+  const { subtotal, discount, tax, total } = invoice;
+  const lines = [`Subtotal: ${formatCents(subtotal)}`];
+  if (discount > 0) {
+    lines.push(`Discount: -${formatCents(discount)}`);
+  }
+  lines.push(`Tax:      ${formatCents(tax)}`);
+  lines.push(`Total:    ${formatCents(total)}`);
+  return lines.join('\n');
+}
