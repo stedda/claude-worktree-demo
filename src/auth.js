@@ -3,5 +3,5 @@ export function isSessionValid(session, now = Date.now()) {
     return false;
   }
 
-  return session.expiresAt >= now;
+  return session.expiresAt > now;
 }
