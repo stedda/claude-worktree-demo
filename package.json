@@ -6,6 +6,7 @@
   "description": "A tiny fictional app for a three-worktree demo.",
   "scripts": {
     "test": "node --test",
+    "invoice": "node src/cli.js",
     "demo:panes": "bash demo/panes.sh",
     "demo:prs": "bash demo/pr-list.sh"
   },
